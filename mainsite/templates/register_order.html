@@ -1,0 +1,319 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <style>
+    h3{
+     font-family: 'Shabnam FD', sans-serif;
+    }
+    </style>
+{% endblock %}
+
+{% block title %}
+    {% if not request.GET %}
+سفارش
+    {% else %}
+تغییر سفارش
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    {% if request.GET or form_customer.errors or form_change.errors %}
+<div class="container" xmlns="http://www.w3.org/1999/html">
+        <div class="row">
+            <div class="col-xl-12">
+            {% endif %}
+                <h1>
+                    {% if not request.GET %}
+                    ثبت سفارش
+                    {% else %}
+
+                    تغییر سفارش
+                    {% endif %}
+                </h1>
+                <br>
+                <br>
+                <br>
+                <br>
+                    <form action="{% url "mainsite:register_order" %}" class="needs-validation" method="post" enctype="multipart/form-data">
+                    <em >
+                    {{ form_customer.non_field_errors }}
+                    {{ form_customer.domain.errors }}
+                    {{ form_customer.phone.errors }}
+                    {{ form_change.non_field_errors }}
+                    {{ form_change.cdomain.errors }}
+                    {{ form_change.cphone.errors }}
+                    </em>
+
+                        <div class="form-row">
+                        {% csrf_token %}
+                    {% if not request.GET %}
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom01">نام و نام خانوادگی</label>
+                            {{ form_customer.name }}
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">نام شرکت</label>
+                            {{ form_customer.company }}
+                            <div class="valid-feedback">
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">نام دامنه</label>
+                            {{ form_customer.domain }}
+                            <div class="valid-feedback">
+                            </div>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                       <div class="form-row">
+                            <label for="colFormLabel" class="col-form-label">ایمیل</label>
+                            <div class="col-md-4 mb-3">
+                                <input type="email" name="email" class="form-control" id="colFormLabel" placeholder="example@gmail.com" required>
+                                <div class="invalid-feedback">نام ایمیل را به درستی وارد کنید</div><br>
+                       </div>
+                        <label for="validationCustom04" class="col-sm-2 col-form-label">شماره تماس</label>
+                            <div class="col-md-4 mb-3">
+                                <input type="text" name="phone" class="form-control" id="validationCustom04" required>
+                                <div class="invalid-feedback">شماره تماس را به درستی وارد کنید</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label for="validationCustom05">تصویر لوگو</label><br>
+                            <input type="file" id="validationCustom05" name="logo" accept="image/png, image/jpeg" required>
+                        </div>
+
+                    {% else %}
+
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom01">نام و نام خانوادگی</label>
+                            {{ form_change.cname }}
+                            <div class="invalid-feedback">پر کردن این فیلد لازم است</div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">نام شرکت</label>
+                            {{ form_change.ccompany }}
+                            <div class="valid-feedback">
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                         <div class="col-md-4 mb-3">
+                            <label for="validationCustom02">نام دامنه</label>
+                            <input type="text" name="cdomain" class="form-control" value="{{ customer.domain }}" id="validationCustom03">
+                        </div>
+
+                            <div class="col-md-6 mb-3"> <label for="validationCustom04" class="col-sm-6 col-form-label">شماره تماس</label>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="cphone" value="{{ customer.phone }}" class="form-control" id="validationCustom04">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                        <div class="col-sm-12">
+                            <label for="validationCustom05">تصویر لوگو</label><br>
+                            <input type="file" name="clogo" id="validationCustom05" accept="image/*">
+                        </div>
+                    </div>
+
+
+                    {% endif %}
+                    </div>
+                    <h3 class="note">می توانید خدمات مورد نیاز خود را انتخاب کنید(توجه کنید که قیمت ها به تومان است)</h3>
+                    <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+
+                    <!-- example of hard coded html
+                        <li><label><input class="uk-checkbox" type="checkbox" name="api_intermediary" value="رابط برنامه نویسی متوسط،">
+                                <tr>
+                                    <td>API متوسط (RESTful)</td>&nbsp;&nbsp;
+                                    <td>400/00</td>
+                                </tr>
+                        </label></li>
+                     -->
+                        <ul>
+                            <li><label>{{ form_option.api_simple }}
+                                <tr>
+                                    <td>API ساده (RESTful)</td>&nbsp;&nbsp;
+                                    <td>200/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.api_intermediary }}
+                                <tr>
+                                    <td>API متوسط (RESTful)</td>&nbsp;&nbsp;
+                                    <td>400/00</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.api_advanced }}
+                                <tr>
+                                    <td>API پیشرفته (RESTful)</td>&nbsp;&nbsp;
+                                    <td>600/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.search_simple }}
+                                <tr>
+                                    <td>سرچ ساده</td>&nbsp;&nbsp;
+                                    <td>رایگان</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.search_advanced }}
+                                <tr>
+                                    <td>سرچ پیشرفته</td>&nbsp;&nbsp;
+                                    <td>300/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.filtering_simple }}
+                                <tr>
+                                    <td>فیلترینگ ساده</td>&nbsp;&nbsp;
+                                    <td>100/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.filtering_advanced }}
+                                <tr>
+                                    <td>فیلترینگ پیشرفته</td>&nbsp;&nbsp;
+                                    <td>300/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.responsive }}
+                                <tr>
+                                    <td>ریسپانسیوسازی کامل</td>&nbsp;&nbsp;
+                                    <td>400/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.login }}
+                                <tr>
+                                    <td>قابلیت ثبت نام کاربران </td>&nbsp;&nbsp;
+                                    <td>100/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.login_social }}
+                                <tr>
+                                    <td>قابلیت لاگین کاربران با استفاده از اکانت گوگل</td>&nbsp;&nbsp;
+                                    <td>250/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.pgi }}
+                                <tr>
+                                    <td>درگاه پرداخت(زرین پال)</td>&nbsp;&nbsp;
+                                    <td>100/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.users_add_content }}
+                                <tr>
+                                    <td>امکان پست محتوا توسط کاربران</td>&nbsp;&nbsp;
+                                    <td>400/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.comments }}
+                                <tr>
+                                    <td>امکان نظرگذاری کاربران
+                                    </td>&nbsp;&nbsp;
+                                    <td>100/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.comments_advanced }}
+                                <tr>
+                                    <td>نظر گذاری پیشرفته</td>&nbsp;&nbsp;
+                                    <td>300/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.security }}
+                            <tr>
+                                <td>امنیت</td>&nbsp;&nbsp;
+                                <td>رایگان</td>
+                            </tr>
+                            </label></li>
+                            <li><label>{{ form_option.security_advanced }}
+                                <tr>
+                                    <td>امنیت پیشرفته</td>&nbsp;&nbsp;
+                                    <td>100/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.language_add }}
+                                <tr>
+                                <td>اضافه نمودن زبان انگلیسی در سایت</td>&nbsp;&nbsp;
+                                <td>400/000</td>
+                            </tr></label></li>
+                            <li><label>{{ form_option.cache }}
+                                <tr>
+                                <td>قابلیت کش کردن مطالب در سایت(جهت سرعت بسیار بالاتر بارگذاری صفحات و سئوی بالاتر)</td>&nbsp;&nbsp;
+                                <td>300/000</td>
+                            </tr>
+                            </label></li>
+                            <li><label>{{ form_option.seo_simple }}
+                                <tr>
+                                    <td>سئو ساده</td>&nbsp;&nbsp;
+                                    <td>100/000</td>
+                                </tr>
+                            </label></li>
+                            <li><label>{{ form_option.seo_advanced }}
+                                <tr>
+                                    <td>سئو پیشرفته</td>&nbsp;&nbsp;
+                                    <td>300/000</td>
+                                </tr></label></li>
+                             <li><label>{{ form_option.auth_change }}
+                                <tr>
+                                    <td>تغییر شیوه احراز هویت (به صورت پیشفرض با نام کاربری احراز هویت صورت میگیرد)</td>&nbsp;&nbsp;
+                                    <td>400/000</td>
+                                </tr></label></li>
+                        </ul>
+                    </div>
+
+                    {% if not request.GET %}
+                        <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="send" id="invalidCheck" required>&nbsp;&nbsp;&nbsp;
+                            <label class="form-check-label" for="invalidCheck"><p><a href="{% url "mainsite:index" %}#Ghavanin">قوانین</a> را مطالعه کردم و با آنها موافق هستم</p></label>
+                            <div class="invalid-feedback">
+                                تمام قسمت ها باید به درستی پر شوند
+                            </div>
+                        </div>
+                    </div>
+                        <button class="order-btn" type="submit"><svg id="order" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
+                        <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                    </svg>ثبت سفارش</button><br><br><br>
+                    {% else %}
+                        <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button class="okEdite-btn" type="submit"><svg id="okEdite" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pin-angle" viewBox="0 0 16 16">
+                            <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.92 5.92 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146zm.122 2.112v-.002zm0-.002v.002a.5.5 0 0 1-.122.51L6.293 6.878a.5.5 0 0 1-.511.12H5.78l-.014-.004a4.507 4.507 0 0 0-.288-.076 4.922 4.922 0 0 0-.765-.116c-.422-.028-.836.008-1.175.15l5.51 5.509c.141-.34.177-.753.149-1.175a4.924 4.924 0 0 0-.192-1.054l-.004-.013v-.001a.5.5 0 0 1 .12-.512l3.536-3.535a.5.5 0 0 1 .532-.115l.096.022c.087.017.208.034.344.034.114 0 .23-.011.343-.04L9.927 2.028c-.029.113-.04.23-.04.343a1.779 1.779 0 0 0 .062.46z"/>
+                        </svg>ثبت تغییرات</button>
+                    </div>
+                        </div><br><br>
+                    {% endif %}
+                        </form>
+
+                    <br>
+                {% if not request.GET %}
+                    <div class="form-group row">
+                    <div class="col-sm-10">
+                        <a href="{% url 'mainsite:index' %}">
+                        <button class="btn btn-secondary" type="button">بازگشت به صفحه اصلی</button>
+                        </a>
+                    </div>
+                </div><br>
+                    {% if request.session.customer %}
+                        <a href="{% url 'sales:invoice' %}"><input class="btn btn-info" type="button" value="مشاهده فاکتور"></a>
+                    {% endif %}
+                {% else %}
+                    <div class="form-group row">
+                    <div class="col-sm-10">
+                        <a href="{% url 'sales:invoice' %}">
+                        <button class="order-btn" type="button">بازگشت به فاکتور</button>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div><br><br>
+
+{% endblock content %}
+
+{% block footer %}
+{% endblock %}

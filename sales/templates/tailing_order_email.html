@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}بررسی سفارش{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <h2>می توانید با وارد کردن ایمیل خود در فیلد زیر سفارش خود را در صورت وجود پیگیری کنید</h2>
+                <div class="col-md-4 mb-3">
+                    <form method="post">
+                        {% csrf_token %}
+                        <label class="col-form-label">ایمیل خود را وارد کنید</label>
+                        {{ form.email }}
+                        <div class="invalid-feedback">ایمیل را به درستی وارد کنید</div><br>
+                        <button class="order-btn" type="submit" style="position: relative;">پیگیری سفارش</button>
+                    </form>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <p>
+                        <!--added text or table or enything!!-->
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div><br><br>
+{% endblock %}

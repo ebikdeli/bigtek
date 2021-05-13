@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}مشخصات ثبت شده مشتری{% endblock %}
+
+{% block content %}
+    {% if customer %}
+        <h1>برای ایمیل وارد شده مشخصات زیر ثبت شده است:</h1>
+        <h3>ایمیل: {{ customer.email }}</h3>
+        <p>نام و نام خانوادگی: {{ customer.name }}</p>
+        <p>نام شرکت: {{ customer.company }}</p>
+        <p>دامنه: {{ customer.domain }}</p>
+        <p><img src="{{ customer.logo.url }}" width="300" height="200"></p><br>
+        {% if customer.cart %}
+            <h2>سبد خرید ثبت شده برای این ایمیل:</h2>
+            <p>قیمت کل: {{ customer.cart.total_price }}</p>
+            <h3>آپشن های انتخاب شده:</h3>
+            <table>
+            {% if options %}
+                {% for option, value in options.items %}
+                        <tr>
+                            <td>{{ option }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                {% endfor %}
+            {% endif %}
+            </table>
+        {% else %}
+            <h2>سبد خرید خالی است</h2>
+        {% endif %}
+    {% else %}
+        <h1>هیچ مشخصاتی برای این ایمیل ثبت نشده</h1>
+    {% endif %}
+    <a href="{% url 'mainsite:register_order' %}" class="btn btn-info">بازگشت به صفحه ثبت سفارش</a>
+{% endblock %}
